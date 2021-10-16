@@ -4,11 +4,15 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/FPT Polytechnic/Semester 4/Semester 4_1/Exercise Android Advanced/Assignment_MOB201/app/src/main/res/drawable/ic_signup.xml" value="0.2911458333333333" />
+        <entry key="..\:/FPT Polytechnic/Semester 4/Semester 4_1/Exercise Android Advanced/Assignment_MOB201/app/src/main/res/layout/activity_admin_course_detail.xml" value="0.275" />
+        <entry key="..\:/FPT Polytechnic/Semester 4/Semester 4_1/Exercise Android Advanced/Assignment_MOB201/app/src/main/res/layout/activity_admin_welcome.xml" value="0.275" />
         <entry key="..\:/FPT Polytechnic/Semester 4/Semester 4_1/Exercise Android Advanced/Assignment_MOB201/app/src/main/res/layout/activity_course_detail.xml" value="0.1" />
         <entry key="..\:/FPT Polytechnic/Semester 4/Semester 4_1/Exercise Android Advanced/Assignment_MOB201/app/src/main/res/layout/activity_login.xml" value="0.2" />
         <entry key="..\:/FPT Polytechnic/Semester 4/Semester 4_1/Exercise Android Advanced/Assignment_MOB201/app/src/main/res/layout/activity_register.xml" value="0.1" />
+        <entry key="..\:/FPT Polytechnic/Semester 4/Semester 4_1/Exercise Android Advanced/Assignment_MOB201/app/src/main/res/layout/activity_student_course_detail.xml" value="0.275" />
         <entry key="..\:/FPT Polytechnic/Semester 4/Semester 4_1/Exercise Android Advanced/Assignment_MOB201/app/src/main/res/layout/activity_student_sign_up.xml" value="0.2" />
         <entry key="..\:/FPT Polytechnic/Semester 4/Semester 4_1/Exercise Android Advanced/Assignment_MOB201/app/src/main/res/layout/activity_student_welcome.xml" value="0.275" />
+        <entry key="..\:/FPT Polytechnic/Semester 4/Semester 4_1/Exercise Android Advanced/Assignment_MOB201/app/src/main/res/layout/dialog_edit_course.xml" value="0.1" />
         <entry key="..\:/FPT Polytechnic/Semester 4/Semester 4_1/Exercise Android Advanced/Assignment_MOB201/app/src/main/res/layout/layout_courses_item.xml" value="0.136" />
         <entry key="..\:/FPT Polytechnic/Semester 4/Semester 4_1/Exercise Android Advanced/Assignment_MOB201/app/src/main/res/layout/layout_schedule_item.xml" value="0.1" />
       </map>

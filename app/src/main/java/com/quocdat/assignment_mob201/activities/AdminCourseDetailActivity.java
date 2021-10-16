@@ -3,18 +3,22 @@ package com.quocdat.assignment_mob201.activities;
 import static com.quocdat.assignment_mob201.utilities.Constants.EXAM_TYPE;
 import static com.quocdat.assignment_mob201.utilities.Constants.SCHEDULE_TYPE;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,48 +26,36 @@ import android.widget.Toast;
 import com.quocdat.assignment_mob201.R;
 import com.quocdat.assignment_mob201.adapter.ScheduleAdapter;
 import com.quocdat.assignment_mob201.models.Course;
-import com.quocdat.assignment_mob201.models.Enroll;
 import com.quocdat.assignment_mob201.models.Schedule;
 import com.quocdat.assignment_mob201.services.CourseService;
 import com.quocdat.assignment_mob201.services.EnrolltService;
 import com.quocdat.assignment_mob201.services.ScheduleService;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-public class CourseDetailActivity extends AppCompatActivity {
+public class AdminCourseDetailActivity extends AppCompatActivity {
 
     TextView tvCourseDetailCode, tvCourseDetailTeacher, tvCourseDetailName;
     ListView lvSchedules, lvSchedulesExams;
-    AppCompatButton btnJoined, btnCancel;
 
     List<Schedule> schedules, exams;
     ScheduleAdapter scheduleAdapter, examsAdapter;
-
-    boolean joined = false;
     Course course;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_course_detail);
+        setContentView(R.layout.activity_admin_course_detail);
+
+
         tvCourseDetailCode = findViewById(R.id.tvCourseDetailCode);
         tvCourseDetailTeacher = findViewById(R.id.tvCourseDetailTeacher);
         tvCourseDetailName = findViewById(R.id.tvCourseDetailName);
         lvSchedules = findViewById(R.id.lvSchedules);
         lvSchedulesExams = findViewById(R.id.lvSchedulesExams);
-        btnCancel = findViewById(R.id.btnCancel);
-        btnJoined = findViewById(R.id.btnJoined);
 
         course = getIntent().getParcelableExtra("course");
-        joined = getIntent().getBooleanExtra("joined", false);
-
-        if (joined){
-            btnJoined.setText("Rời khỏi");
-        }else {
-            btnJoined.setText("Tham gia");
-        }
 
         tvCourseDetailCode.setText(course.getCode());
         tvCourseDetailTeacher.setText(course.getTeacher());
@@ -82,22 +74,60 @@ public class CourseDetailActivity extends AppCompatActivity {
         getSchedules(EXAM_TYPE, course.getId());
     }
 
-    public void onButtonJoined(View view){
-        SharedPreferences preferences = getSharedPreferences("LOGIN_STATUS", MODE_PRIVATE);
-        int userId = preferences.getInt("id", 0);
-        Intent intent = new Intent(this, EnrolltService.class);
-        Enroll enroll = new Enroll(-1, course.getId(), userId, new Date().toString());
-        if (joined){
-            intent.setAction(EnrolltService.ACTION_LEAVE);
-        }else {
-            intent.setAction(EnrolltService.ACTION_REGISTER);
-        }
-        intent.putExtra("enroll",(Parcelable) enroll);
+    public void onEdit(View view){
+        Intent intent = new Intent(this, CourseService.class);
+        intent.putExtra("course", course);
+        startService(intent);
+
+        openDialogEdit();
+    }
+
+    public void onRemove(View view){
+        Intent intent = new Intent(this, CourseService.class);
+        intent.setAction(CourseService.ACTION_DELETE);
+        intent.putExtra("course", course);
         startService(intent);
     }
 
-    public void onButtonCancel(View view){
-        finish();
+    public void openDialogEdit(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(AdminCourseDetailActivity.this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_edit_course, null);
+        builder.setView(view);
+        Dialog dialog = builder.create();
+        dialog.show();
+
+        EditText edtCoureNameEdit = view.findViewById(R.id.edtCoureNameEdit);
+        EditText edtCourseCodeEdit = view.findViewById(R.id.edtCourseCodeEdit);
+        EditText edtCourseTeacherEdit = view.findViewById(R.id.edtCourseTeacherEdit);
+        Button btnSaveEdit = view.findViewById(R.id.btnSaveEdit);
+        Button btnCancelEdit = view.findViewById(R.id.btnCancelEdit);
+
+        course = getIntent().getParcelableExtra("course");
+
+        edtCoureNameEdit.setText(course.getName());
+        edtCourseCodeEdit.setText(course.getCode());
+        edtCourseTeacherEdit.setText(course.getTeacher());
+
+        btnSaveEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String code = edtCourseCodeEdit.getText().toString();
+                String name = edtCoureNameEdit.getText().toString();
+                String teacher = edtCourseTeacherEdit.getText().toString();
+
+                course.setCode(code);
+                course.setName(name);
+                course.setTeacher(teacher);
+
+                Intent intent = new Intent(AdminCourseDetailActivity.this, CourseService.class);
+                intent.setAction(CourseService.ACTION_UPDATE);
+                intent.putExtra("course", course);
+                startService(intent);
+            }
+        });
+
+
     }
 
     public void getSchedules(int type, int courseId){
@@ -114,39 +144,44 @@ public class CourseDetailActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter(ScheduleService.EVENT_SCHEDULE_SERVICE);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
 
-        IntentFilter filterEnroll = new IntentFilter(EnrolltService.EVENT_ENROLL_SERVICE);
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiverEnroll, filterEnroll);
+        IntentFilter courseServiceFilter = new IntentFilter(CourseService.EVENT_COURSE_SERVICE);
+        LocalBroadcastManager.getInstance(this).registerReceiver(CourseServicereceiver, courseServiceFilter);
+
+        course = getIntent().getParcelableExtra("course");
+        getSchedules(SCHEDULE_TYPE, course.getId());
+        getSchedules(EXAM_TYPE, course.getId());
     }
 
     @Override
-    protected void onPause() {
+    protected void onPause () {
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
 
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiverEnroll);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(CourseServicereceiver);
     }
 
-    private BroadcastReceiver receiverEnroll = new BroadcastReceiver() {
+    private BroadcastReceiver CourseServicereceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             int resultCode = intent.getIntExtra("resultCode", RESULT_CANCELED);
-
             if (resultCode == RESULT_OK) {
                 String action = intent.getStringExtra("action");
-                boolean result = intent.getBooleanExtra("result", false);
+                boolean result;
                 switch (action){
-                    case EnrolltService.ACTION_LEAVE:
+                    case CourseService.ACTION_DELETE:
+                        result = intent.getBooleanExtra("result", false);
                         if (result){
-                            btnJoined.setText("Tham gia");
+                            finish();
                         }else {
-                            Toast.makeText(CourseDetailActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AdminCourseDetailActivity.this, "This course can not delete!", Toast.LENGTH_SHORT).show();
                         }
                         break;
-                    case EnrolltService.ACTION_REGISTER:
+                    case CourseService.ACTION_UPDATE:
+                        result = intent.getBooleanExtra("result", false);
                         if (result){
-                            btnJoined.setText("Rời khỏi");
+                            finish();
                         }else {
-                            Toast.makeText(CourseDetailActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AdminCourseDetailActivity.this, "Update failed!", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     default: break;

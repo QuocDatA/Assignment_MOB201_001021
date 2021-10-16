@@ -9,7 +9,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.quocdat.assignment_mob201.R;
-import com.quocdat.assignment_mob201.activities.CourseDetailActivity;
+import com.quocdat.assignment_mob201.activities.AdminCourseDetailActivity;
+import com.quocdat.assignment_mob201.activities.StudentCourseDetailActivity;
 import com.quocdat.assignment_mob201.models.Course;
 
 import java.util.List;
@@ -18,12 +19,13 @@ public class CourseAdapter extends BaseAdapter {
 
     private Context ctx;
     private List<Course> data;
-    private boolean joined;
+    private boolean joined, isAdmin;
 
-    public CourseAdapter(Context ctx, List<Course> data, boolean joined) {
+    public CourseAdapter(Context ctx, List<Course> data, boolean joined, boolean isAdmin) {
         this.ctx = ctx;
         this.data = data;
         this.joined = joined;
+        this.isAdmin = isAdmin;
     }
 
     @Override
@@ -66,9 +68,15 @@ public class CourseAdapter extends BaseAdapter {
         holder.tvDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ctx, CourseDetailActivity.class);
-                intent.putExtra("course",(Parcelable) course);
-                intent.putExtra("joined",joined);
+                Intent intent;
+                if (isAdmin){
+                    intent = new Intent(ctx, AdminCourseDetailActivity.class);
+                    intent.putExtra("course",(Parcelable) course);
+                }else {
+                    intent = new Intent(ctx, StudentCourseDetailActivity.class);
+                    intent.putExtra("course",(Parcelable) course);
+                    intent.putExtra("joined",joined);
+                }
                 ctx.startActivity(intent);
             }
         });

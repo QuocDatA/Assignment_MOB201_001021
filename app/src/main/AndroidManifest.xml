@@ -10,10 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Assignment_MOB201">
         <activity
+            android:name=".activities.AdminCourseDetailActivity"
+            android:exported="true" />
+        <activity
             android:name=".activities.StudentSignUpActivity"
             android:exported="true" />
         <activity
-            android:name=".activities.CourseDetailActivity"
+            android:name=".activities.StudentCourseDetailActivity"
             android:exported="true" />
         <activity
             android:name=".activities.AdminWelcomeActivity"

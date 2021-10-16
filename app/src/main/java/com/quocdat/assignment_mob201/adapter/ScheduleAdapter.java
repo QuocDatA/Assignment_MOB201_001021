@@ -1,16 +1,12 @@
 package com.quocdat.assignment_mob201.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Parcelable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.quocdat.assignment_mob201.R;
-import com.quocdat.assignment_mob201.activities.CourseDetailActivity;
-import com.quocdat.assignment_mob201.models.Course;
 import com.quocdat.assignment_mob201.models.Schedule;
 
 import java.util.List;

@@ -36,8 +36,8 @@ public class StudentWelcomeActivity extends AppCompatActivity {
         lvAllCourses = findViewById(R.id.lvCourses);
         lvJoinedCourses = findViewById(R.id.lvJoinedCourses);
 
-        allCoursesAdapter = new CourseAdapter(this, allCourses, false);
-        joinedCoursesAdapter = new CourseAdapter(this, joinedCourses, true);
+        allCoursesAdapter = new CourseAdapter(this, allCourses, false, false);
+        joinedCoursesAdapter = new CourseAdapter(this, joinedCourses, true, false);
 
         lvAllCourses.setAdapter(allCoursesAdapter);
         lvJoinedCourses.setAdapter(joinedCoursesAdapter);
