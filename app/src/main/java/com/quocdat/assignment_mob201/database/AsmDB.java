@@ -67,30 +67,31 @@ public class AsmDB  extends SQLiteOpenHelper {
                 "('HTML&CSS', 'HC01', 'Le Tran Hoa')";
         db.execSQL(q);
 
-        q = "INSERT INTO SCHEDULES(DATE, TIME, ADDRESS, MEET, COURSE_ID) VALUES " +
-                "('01-09-2021', '7:00 - 9:00', 'Cong vien phan mem Quang Trung', 'meet', 1)," +
-                "('01-09-2021', '9:00 - 11:00', 'Cong vien phan mem Quang Trung', 'meet', 2)," +
-                "('01-09-2021', '13:00 - 15:00', 'Cong vien phan mem Quang Trung', 'meet', 4)," +
-                "('01-09-2021', '15:00 - 17:00', 'Cong vien phan mem Quang Trung', 'meet', 8)," +
-                "('01-10-2021', '7:00 - 9:00', 'Cong vien phan mem Quang Trung', 'meet', 3)," +
-                "('01-10-2021', '9:00 - 11:00', 'Cong vien phan mem Quang Trung', 'meet', 5)," +
-                "('01-10-2021', '13:00 - 15:00', 'Cong vien phan mem Quang Trung', 'meet', 7)," +
-                "('01-10-2021', '15:00 - 17:00', 'Cong vien phan mem Quang Trung', 'meet', 9)," +
-                "('01-11-2021', '7:00 - 9:00', 'Cong vien phan mem Quang Trung', 'meet', 1)," +
-                "('01-11-2021', '9:00 - 11:00', 'Cong vien phan mem Quang Trung', 'meet', 2)";
+        q = "INSERT INTO SCHEDULES(DATE, TIME, ADDRESS, MEET, TYPE, COURSE_ID) VALUES " +
+                "('01-09-2021', '7:00 - 9:00', 'P305', 'http://meet.google.com/top-ynme-hka', 1, 1)," +
+                "('01-09-2021', '9:00 - 11:00', 'P405', 'http://meet.google.com/top-ynme-hka', 1, 2)," +
+                "('01-09-2021', '13:00 - 15:00', 'P307', 'http://meet.google.com/top-ynme-hka', 1, 4)," +
+                "('01-09-2021', '15:00 - 17:00', 'P505', 'http://meet.google.com/top-ynme-hka', 1, 8)," +
+                "('01-10-2021', '7:00 - 9:00', 'P403', 'http://meet.google.com/top-ynme-hka', 1, 3)," +
+                "('01-10-2021', '9:00 - 11:00', 'P306', 'http://meet.google.com/top-ynme-hka', 1, 5)," +
+                "('01-10-2021', '13:00 - 15:00', 'P304', 'http://meet.google.com/top-ynme-hka', 1, 7)," +
+                "('01-10-2021', '15:00 - 17:00', 'P303', 'http://meet.google.com/top-ynme-hka', 1, 9)," +
+                "('01-11-2021', '7:00 - 9:00', 'P305', 'http://meet.google.com/top-ynme-hka', 2, 1)," +
+                "('01-11-2021', '9:00 - 11:00', 'P405', 'http://meet.google.com/top-ynme-hka', 2, 2)";
         db.execSQL(q);
 
-        q = "INSERT INTO ENROLLS(DATE, USER_ID, COURSE_ID) VALUES" +
-                "('01-09-2021', 1, 1)," +
-                "('01-09-2021', 2, 6)," +
-                "('01-09-2021', 5, 3)," +
-                "('01-09-2021', 6, 2)," +
-                "('01-09-2021', 2, 2)," +
-                "('01-09-2021', 6, 5)," +
-                "('01-09-2021', 8, 3)," +
-                "('01-09-2021', 4, 7)," +
-                "('01-09-2021', 1, 2)," +
-                "('01-09-2021', 7, 5)";
+        q = "INSERT INTO ENROLLS(USER_ID, COURSE_ID) VALUES" +
+                "(2, 1)," +
+                "(2, 6)," +
+                "(5, 3)," +
+                "(6, 2)," +
+                "(8, 2)," +
+                "(6, 5)," +
+                "(8, 3)," +
+                "(4, 7)," +
+                "(2, 2)," +
+                "(7, 5)";
+        db.execSQL(q);
     }
 
     @Override

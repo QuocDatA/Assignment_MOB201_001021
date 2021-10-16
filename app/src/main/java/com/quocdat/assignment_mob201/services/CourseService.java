@@ -3,23 +3,24 @@ package com.quocdat.assignment_mob201.services;
 import android.app.Activity;
 import android.app.IntentService;
 import android.content.Intent;
-import android.content.Context;
 import android.os.Parcelable;
 
+import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.quocdat.assignment_mob201.dao.CourseDAO;
 import com.quocdat.assignment_mob201.models.Course;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 
 public class CourseService extends IntentService {
 
     public static final String EVENT_COURSE_SERVICE = "CourseService";
     public static final String ACTION_GET_ALL_COURSE = "getAllCourse";
-    public static final String ACTION_GET_ALL_COURSE_BY_STUDENT_ID = "getAllCoursesByStudentId";
+    public static final String ACTION_GET_ALL_JOINED_COURSE_BY_STUDENT_ID = "getJoinedCourses";
+    public static final String ACTION_GET_ALL_COURSE_BY_STUDENT_ID = "getNotJoinedCourses";
     public static final String ACTION_GET_COURSE_BY_ID = "getCourseById";
     public static final String ACTION_INSERT = "insert";
     public static final String ACTION_UPDATE = "update";
@@ -30,7 +31,7 @@ public class CourseService extends IntentService {
 
     public CourseService() {
         super("CourseService");
-        dao = new CourseDAO(getApplicationContext());
+        dao = new CourseDAO(this);
     }
 
     @Override
@@ -43,12 +44,17 @@ public class CourseService extends IntentService {
             switch (action){
                 case ACTION_GET_ALL_COURSE:
                     List<Course> allCourses = dao.getAllCourses();
-                    i.putExtra("result", (Parcelable) allCourses);
+                    i.putParcelableArrayListExtra("result", (ArrayList<Course>) allCourses);
+                    break;
+                case ACTION_GET_ALL_JOINED_COURSE_BY_STUDENT_ID:
+                    Integer studentId = intent.getIntExtra("studentId", 0);
+                    List<Course> allCoursesByStudentId = dao.getJoinedCourses(studentId);
+                    i.putParcelableArrayListExtra("result", (ArrayList<Course>) allCoursesByStudentId);
                     break;
                 case ACTION_GET_ALL_COURSE_BY_STUDENT_ID:
-                    Integer studentId = intent.getIntExtra("studentId", 0);
-                    List<Course> allCoursesByStudentId = dao.getAllCoursesByStudentId(studentId);
-                    i.putExtra("result", (Parcelable) allCoursesByStudentId);
+                    Integer _studentId = intent.getIntExtra("studentId", 0);
+                    List<Course> _allCoursesByStudentId = dao.getNotJoinedCourses(_studentId);
+                    i.putParcelableArrayListExtra("result", (ArrayList<Course>) _allCoursesByStudentId);
                     break;
                 case ACTION_GET_COURSE_BY_ID:
                     Integer courseId = intent.getIntExtra("courseId", 0);
@@ -70,11 +76,26 @@ public class CourseService extends IntentService {
                     result = dao.delete(course.getId());
                     i.putExtra("result", result);
                     break;
+                default: break;
             }
+            i.putExtra("action", action);
             i.putExtra("resultCode", Activity.RESULT_OK);
             LocalBroadcastManager.getInstance(this).sendBroadcast(i);
         }
     }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
+        return super.onStartCommand(intent, flags, startId);
+    }
 }

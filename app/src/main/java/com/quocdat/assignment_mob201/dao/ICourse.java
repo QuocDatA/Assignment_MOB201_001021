@@ -7,7 +7,8 @@ import java.util.List;
 public interface ICourse {
     List<Course> getAllCourses();
     //select * from courses inner join enroll on courseid = courseid where userid =2
-    List<Course> getAllCoursesByStudentId(int studentId);
+    List<Course> getJoinedCourses(int studentId);
+    List<Course> getNotJoinedCourses(int studentId);
     Course getCourseById(int id);
     boolean insert(Course course);
     boolean update(Course course);

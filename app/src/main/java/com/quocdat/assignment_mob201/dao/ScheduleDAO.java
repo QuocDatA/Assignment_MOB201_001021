@@ -20,31 +20,71 @@ public class ScheduleDAO implements ISchedule{
         db = AsmDB.getDbInstance(context);
     }
     @Override
-    public List<Schedule> getAllSchedule(int type) {
+    public List<Schedule> getAllSchedule(int type, int courseId) {
         List<Schedule> list = new ArrayList<>();
-        String q = "SELECT ID, DATE, TIME, ADDRESS, MEET, TYPE FROM SCHEDULES";
-        String[] params = new String[]{String.valueOf(type)};
+        String q = "SELECT ID, DATE, TIME, ADDRESS, MEET, COURSE_ID FROM SCHEDULES WHERE TYPE = ? AND COURSE_ID = ?";
         SQLiteDatabase database = db.getReadableDatabase();
-        Cursor cursor = database.rawQuery(q, params);
+        Cursor cursor = database.rawQuery(q, new String[]{String.valueOf(type), String.valueOf(courseId)});
         try{
             if (cursor.moveToFirst()){
-                while (cursor.isAfterLast()){
+                while (!cursor.isAfterLast()){
                     Integer schedule_id = cursor.getInt(cursor.getColumnIndex("ID"));
                     Integer course_id = cursor.getInt(cursor.getColumnIndex("COURSE_ID"));
-                    Integer type1 = cursor.getInt(cursor.getColumnIndex("TYPE"));
                     String date = cursor.getString(cursor.getColumnIndex("DATE"));
                     String time = cursor.getString(cursor.getColumnIndex("TIME"));
                     String address = cursor.getString(cursor.getColumnIndex("ADDRESS"));
                     String meet = cursor.getString(cursor.getColumnIndex("MEET"));
 
-
-                    Schedule schedule = new Schedule(schedule_id, course_id, type1, date, time, address, meet);
+                    Schedule schedule = new Schedule();
+                    schedule.setId(schedule_id);
+                    schedule.setCourse_id(course_id);
+                    schedule.setDate(date);
+                    schedule.setTime(time);
+                    schedule.setAddress(address);
+                    schedule.setMeet(meet);
                     list.add(schedule);
                     cursor.moveToNext();
                 }
             }
         }catch (Exception e){
             Log.d("getAllSchedule:  ", e.getMessage());
+        }finally {
+            if (cursor != null && !cursor.isClosed()){
+                cursor.close();
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public List<Schedule> get(int type) {
+        List<Schedule> list = new ArrayList<>();
+        String q = "SELECT ID, DATE, TIME, ADDRESS, MEET FROM SCHEDULES WHERE TYPE = ?";
+        SQLiteDatabase database = db.getReadableDatabase();
+        Cursor cursor = database.rawQuery(q, new String[]{String.valueOf(type)});
+        try{
+            if (cursor.moveToFirst()){
+                while (!cursor.isAfterLast()){
+                    Integer schedule_id = cursor.getInt(cursor.getColumnIndex("ID"));
+                    Integer course_id = cursor.getInt(cursor.getColumnIndex("COURSE_ID"));
+                    String date = cursor.getString(cursor.getColumnIndex("DATE"));
+                    String time = cursor.getString(cursor.getColumnIndex("TIME"));
+                    String address = cursor.getString(cursor.getColumnIndex("ADDRESS"));
+                    String meet = cursor.getString(cursor.getColumnIndex("MEET"));
+
+                    Schedule schedule = new Schedule();
+                    schedule.setId(schedule_id);
+                    schedule.setCourse_id(course_id);
+                    schedule.setDate(date);
+                    schedule.setTime(time);
+                    schedule.setAddress(address);
+                    schedule.setMeet(meet);
+                    list.add(schedule);
+                    cursor.moveToNext();
+                }
+            }
+        }catch (Exception e){
+            Log.d("get:  ", e.getMessage());
         }finally {
             if (cursor != null && !cursor.isClosed()){
                 cursor.close();
@@ -76,7 +116,7 @@ public class ScheduleDAO implements ISchedule{
             database.endTransaction();
         }
 
-        return rows == 1;
+        return rows >= 1;
     }
 
     @Override
@@ -93,7 +133,7 @@ public class ScheduleDAO implements ISchedule{
             values.put("ADDRESS", schedule.getAddress());
             values.put("MEET", schedule.getMeet());
             rows = database.update("SCHEDULES", values, "ID =?",
-                    new String[]{String.valueOf(schedule.getId_schedule())});
+                    new String[]{String.valueOf(schedule.getId())});
 
             //Transaction: kiem tra neu insert bi loi se callback lai
             database.setTransactionSuccessful();

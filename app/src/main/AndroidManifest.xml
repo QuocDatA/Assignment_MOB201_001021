@@ -9,9 +9,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Assignment_MOB201">
+        <activity
+            android:name=".activities.StudentSignUpActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.CourseDetailActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.AdminWelcomeActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.StudentWelcomeActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.RegisterActivity"
+            android:exported="true" />
+
         <service
             android:name=".services.ScheduleService"
-            android:exported="false"></service>
+            android:exported="false" />
         <service
             android:name=".services.EnrolltService"
             android:exported="false" />
@@ -21,14 +37,6 @@
 
         <activity
             android:name=".activities.LoginActivity"
-            android:exported="true" />
-
-        <service
-            android:name=".services.CourseService"
-            android:exported="false" />
-
-        <activity
-            android:name=".activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,6 +44,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".services.CourseService"
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.MainActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

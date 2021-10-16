@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp"
+    tools:context=".activities.StudentWelcomeActivity">
+
+    <TextView
+        android:text="Xin chao"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:text="Danh sach khoa hoc da tham gia"
+        android:textSize="24dp"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/purple_500"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <ListView
+        android:id="@+id/lvJoinedCourses"
+        android:padding="8dp"
+        android:layout_marginTop="8dp"
+        tools:listitem="@layout/layout_courses_item"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"/>
+
+    <TextView
+        android:text="Danh sach cac khoa hoc"
+        android:textSize="24dp"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/purple_500"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <ListView
+        android:id="@+id/lvCourses"
+        android:padding="8dp"
+        android:layout_marginTop="8dp"
+        tools:listitem="@layout/layout_courses_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

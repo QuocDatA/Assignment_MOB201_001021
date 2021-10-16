@@ -19,11 +19,7 @@ public class Course implements Parcelable {
     }
 
     protected Course(Parcel in) {
-        if (in.readByte() == 0) {
-            id = null;
-        } else {
-            id = in.readInt();
-        }
+        id = in.readInt();
         name = in.readString();
         code = in.readString();
         teacher = in.readString();

@@ -5,4 +5,5 @@ import com.quocdat.assignment_mob201.models.Enroll;
 public interface IEnroll {
 
     boolean register(Enroll enroll);
+    boolean leave(Enroll enroll);
 }

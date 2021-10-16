@@ -1,35 +1,61 @@
 package com.quocdat.assignment_mob201.models;
 
-public class User {
-    private int id_user, role;
-    private String username, password, nameUser, phone, dob;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class User implements Parcelable {
+
+    private Integer id, role;
+    private String username, password, name, phone, dob;
 
     public User() {
     }
 
-    public User(int id, int role, String username, String password, String nameUser, String phone, String dob) {
-        this.id_user = id;
+    public User(Integer id, Integer role, String username, String password, String name, String phone, String dob) {
+        this.id = id;
         this.role = role;
         this.username = username;
         this.password = password;
-        this.nameUser = nameUser;
+        this.name = name;
         this.phone = phone;
         this.dob = dob;
     }
 
-    public int getId_user() {
-        return id_user;
+    protected User(Parcel in) {
+        id = in.readInt();
+        role = in.readInt();
+        username = in.readString();
+        password = in.readString();
+        name = in.readString();
+        phone = in.readString();
+        dob = in.readString();
     }
 
-    public void setId_user(int id_user) {
-        this.id_user = id_user;
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
+    public Integer getId() {
+        return id;
     }
 
-    public int getRole() {
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getRole() {
         return role;
     }
 
-    public void setRole(int role) {
+    public void setRole(Integer role) {
         this.role = role;
     }
 
@@ -49,12 +75,12 @@ public class User {
         this.password = password;
     }
 
-    public String getNameUser() {
-        return nameUser;
+    public String getName() {
+        return name;
     }
 
-    public void setNameUser(String nameUser) {
-        this.nameUser = nameUser;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPhone() {
@@ -71,5 +97,22 @@ public class User {
 
     public void setDob(String dob) {
         this.dob = dob;
+    }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeInt(role);
+        dest.writeString(username);
+        dest.writeString(password);
+        dest.writeString(name);
+        dest.writeString(phone);
+        dest.writeString(dob);
     }
 }

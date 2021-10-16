@@ -27,11 +27,17 @@ public class CourseDAO implements ICourse{
 
     //select * from courses inner join enroll on courseid = courseid where userid =2
     @Override
-    public List<Course> getAllCoursesByStudentId(int studentId) {
-        String q = "SELECT C.ID, C.NAME, C.CODE, C.TEACHER FROM COURSES C INNER JOIN ENROLLS E " +
-                "ON E.COURSE_ID = C.ID WHERE E.USER_ID = ?";
+    public List<Course> getJoinedCourses(int studentId) {
+        String q = "SELECT C.ID, C.NAME, C.CODE, C.TEACHER FROM COURSES C INNER JOIN ENROLLS E ON E.COURSE_ID = C.ID WHERE E.USER_ID = ?";
         String[] params = new String[]{String.valueOf(studentId)};
-        return getCourse(q, params, "getAllCoursesByStudentId");
+        return getCourse(q, params, "getJoinedCourses");
+    }
+
+    @Override
+    public List<Course> getNotJoinedCourses(int studentId) {
+        String q = "select cs.ID, cs.CODE, cs.NAME, cs.TEACHER from courses cs where id not in ( select c.id from courses c inner join enrolls e on e.COURSE_ID = c.ID where e.USER_ID = ?)";
+        String[] params = new String[]{String.valueOf(studentId)};
+        return getCourse(q, params, "getNotJoinedCourses");
     }
 
     @Override
@@ -62,8 +68,7 @@ public class CourseDAO implements ICourse{
         }finally {
             database.endTransaction();
         }
-
-        return rows == 1;
+        return rows >= 1;
     }
 
     @Override
@@ -115,7 +120,7 @@ public class CourseDAO implements ICourse{
         Cursor cursor = database.rawQuery(q, params);
         try{
             if (cursor.moveToFirst()){
-                while (cursor.isAfterLast()){
+                while (!cursor.isAfterLast()){
                     Integer id = cursor.getInt(cursor.getColumnIndex("ID"));
                     String name = cursor.getString(cursor.getColumnIndex("NAME"));
                     String code = cursor.getString(cursor.getColumnIndex("CODE"));

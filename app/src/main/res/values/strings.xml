@@ -3,4 +3,10 @@
     <string name="login">Login</string>
     <string name="hint_usernam">Username</string>
     <string name="hint_password">Password</string>
+    <string name="sign_up">Sign up</string>
+    <string name="day_of_birth">Day of birth</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
+    <string name="full_name">Full name</string>
 </resources>
