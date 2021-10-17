@@ -18,6 +18,7 @@
     <LinearLayout
         android:layout_margin="5dp"
         android:padding="5dp"
+        android:background="#F3E1DE"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

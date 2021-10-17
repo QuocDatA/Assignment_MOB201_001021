@@ -1,5 +1,6 @@
 package com.quocdat.assignment_mob201.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -8,6 +9,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.quocdat.assignment_mob201.R;
@@ -42,6 +45,23 @@ public class AdminWelcomeActivity extends AppCompatActivity {
         User user = getIntent().getParcelableExtra("user");
 
         getCourses();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.sign_out_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.menu_sign_out){
+            Intent intent = new Intent(AdminWelcomeActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }else {
+            return super.onOptionsItemSelected(item);
+        }
+        return true;
     }
 
     public void getCourses(){

@@ -5,7 +5,6 @@ import static com.quocdat.assignment_mob201.utilities.Constants.SCHEDULE_TYPE;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.app.Dialog;
@@ -14,7 +13,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -28,7 +26,6 @@ import com.quocdat.assignment_mob201.adapter.ScheduleAdapter;
 import com.quocdat.assignment_mob201.models.Course;
 import com.quocdat.assignment_mob201.models.Schedule;
 import com.quocdat.assignment_mob201.services.CourseService;
-import com.quocdat.assignment_mob201.services.EnrolltService;
 import com.quocdat.assignment_mob201.services.ScheduleService;
 
 import java.util.ArrayList;
@@ -75,7 +72,8 @@ public class AdminCourseDetailActivity extends AppCompatActivity {
     }
 
     public void onEdit(View view){
-        Intent intent = new Intent(this, CourseService.class);
+
+        Intent intent = new Intent(this, AdminCourseDetailActivity.class);
         intent.putExtra("course", course);
         startService(intent);
 
@@ -95,6 +93,7 @@ public class AdminCourseDetailActivity extends AppCompatActivity {
         View view = inflater.inflate(R.layout.dialog_edit_course, null);
         builder.setView(view);
         Dialog dialog = builder.create();
+        dialog.setCancelable(false);
         dialog.show();
 
         EditText edtCoureNameEdit = view.findViewById(R.id.edtCoureNameEdit);
@@ -127,6 +126,13 @@ public class AdminCourseDetailActivity extends AppCompatActivity {
             }
         });
 
+        btnCancelEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
 
     }
 
@@ -145,7 +151,7 @@ public class AdminCourseDetailActivity extends AppCompatActivity {
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
 
         IntentFilter courseServiceFilter = new IntentFilter(CourseService.EVENT_COURSE_SERVICE);
-        LocalBroadcastManager.getInstance(this).registerReceiver(CourseServicereceiver, courseServiceFilter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(courseServiceReceiver, courseServiceFilter);
 
         course = getIntent().getParcelableExtra("course");
         getSchedules(SCHEDULE_TYPE, course.getId());
@@ -157,10 +163,10 @@ public class AdminCourseDetailActivity extends AppCompatActivity {
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
 
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(CourseServicereceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(courseServiceReceiver);
     }
 
-    private BroadcastReceiver CourseServicereceiver = new BroadcastReceiver() {
+    private BroadcastReceiver courseServiceReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             int resultCode = intent.getIntExtra("resultCode", RESULT_CANCELED);

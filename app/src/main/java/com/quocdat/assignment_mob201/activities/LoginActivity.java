@@ -3,6 +3,7 @@ package com.quocdat.assignment_mob201.activities;
 import static com.quocdat.assignment_mob201.utilities.Constants.ROLE_ADMIN;
 import static com.quocdat.assignment_mob201.utilities.Constants.ROLE_STUDENT;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -14,10 +15,18 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.quocdat.assignment_mob201.R;
 import com.quocdat.assignment_mob201.models.User;
@@ -26,8 +35,9 @@ import com.quocdat.assignment_mob201.services.UserService;
 public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText edtUsername, edtPassword;
-    private AppCompatButton btnLogin;
     private TextView tvSignup;
+
+    GoogleSignInClient googleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +48,21 @@ public class LoginActivity extends AppCompatActivity {
 
         edtUsername = findViewById(R.id.edtUsername);
         edtPassword = findViewById(R.id.edtPassword);
-        btnLogin = findViewById(R.id.btnLogin);
         tvSignup = findViewById(R.id.tvSignup);
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso);
+        SignInButton signInButton = findViewById(R.id.btnLoginGoogle);
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = googleSignInClient.getSignInIntent();
+                startActivityForResult(intent, 1000);
+            }
+        });
 
         tvSignup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,6 +72,20 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1000){
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                Log.d("BBB", "onActivityResult: " + account.getEmail());
+            }catch (Exception e){
+                Log.d("BBB", "onActivityResult: " + e.getMessage());
+            }
+        }
     }
 
     public void onLogin(View view){
