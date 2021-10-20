@@ -13,8 +13,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -31,6 +35,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.quocdat.assignment_mob201.R;
 import com.quocdat.assignment_mob201.models.User;
 import com.quocdat.assignment_mob201.services.UserService;
+
+import java.security.MessageDigest;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -72,6 +78,17 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        try {
+            PackageInfo packageInfo = getPackageManager().getPackageInfo("com.demo.demo001", PackageManager.GET_SIGNATURES);
+            for(Signature signature: packageInfo.signatures){
+                MessageDigest messageDigest = MessageDigest.getInstance("SHA");
+                messageDigest.update(signature.toByteArray());
+                Log.d("KeyHash:>>>>>>>>>>>>>>>>>", Base64.encodeToString(messageDigest.digest(),Base64.DEFAULT));
+            }
+        }catch (Exception e){
+            
+        }
     }
 
     @Override
